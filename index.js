@@ -1,25 +1,15 @@
-import express from "express";
+import { app } from "./src/app.js";
 import "dotenv/config";
-import logger from "./src/utils/logger.js";
-import morgan from "morgan";
-const app = express();
-const morganFormat = ":method :url :status :response-time ms";
+import connectDB from "./src/db/index.js";
+
 const port = process.env.PORT || 2000;
-app.use(
-  morgan(morganFormat, {
-    stream: {
-      write: (message) => {
-        const logObject = {
-          method: message.split(" ")[0],
-          url: message.split(" ")[1],
-          status: message.split(" ")[2],
-          responseTime: message.split(" ")[3],
-        };
-        logger.info(JSON.stringify(logObject));
-      },
-    },
+
+connectDB()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
   })
-);
-app.listen(port, () => {
-  console.log(`server is running on port ${port}`);
-});
+  .catch((error) => {
+    console.log("Mongodb connection error", error);
+  });
