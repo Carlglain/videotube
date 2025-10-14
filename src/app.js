@@ -40,4 +40,10 @@ app.use(
     },
   })
 );
+
+//import routes
+import HealthCheckRoute from "./routes/healthcheck.route.js";
+
+//routes
+app.use("api/v0/healthcheck", HealthCheckRoute);
 export { app };
