@@ -45,5 +45,5 @@ app.use(
 import HealthCheckRoute from "./routes/healthcheck.route.js";
 
 //routes
-app.use("api/v0/healthcheck", HealthCheckRoute);
+app.use("/api/v1/healthcheck", HealthCheckRoute);
 export { app };
