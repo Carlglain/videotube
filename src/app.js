@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import logger from "./utils/logger.js";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 const app = express();
 const morganFormat = ":method :url :status :response-time ms";
 
@@ -40,6 +41,8 @@ app.use(
     },
   })
 );
+
+app.use(cookieParser());
 
 //import routes
 import HealthCheckRoute from "./routes/healthcheck.route.js";
