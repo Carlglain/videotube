@@ -1,16 +1,18 @@
-import { registerUser } from "../controllers/user.controllers";
+import { registerUser } from "../controllers/user.controllers.js";
 import { Router } from "express";
-import { upload } from "../middlewares/multer.middlewares";
+import { upload } from "../middlewares/multer.middlewares.js";
+
 const router = Router();
+
 router.post(
   "/register",
   upload.fields([
     {
-      name: "converImage",
+      name: avatar,
       maxCount: 1,
     },
     {
-      name: "avatar",
+      name: coverImage,
       maxCount: 1,
     },
   ]),

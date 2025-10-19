@@ -1,33 +1,29 @@
-import { User } from "../models/user.models";
-import { asyncHandler } from "../utils/asyncHandler";
+import { User } from "../models/user.models.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
 const registerUser = asyncHandler(async (req, res) => {
-  const {
-    username,
-    email,
+  const { name, fullname, email, password } = req.body;
+  const newUser = new User({
+    name,
     fullname,
-    watchHistory,
+    email,
     password,
-    avatar,
-    coverImage,
-    refreshToken,
-    timeStamp,
-  } = req.body;
-  //   try {
-  //     const newUser = new User({
-  //       username,
-  //       email,
-  //       fullname,
-  //       watchHistory,
-  //       password,
-  //       refreshToken,
-  //       timeStamp,
-  //     });
-  //     await newUser
-  //       .save()
-  //       .status(201)
-  //       .send(newUser)
-  //       .json({ message: `User Created succesfully` });
-  //   } catch (err) {}
+  });
+  if ([name, fullname, email, password].some((field) => field?.trim() === "")) {
+    throw new ApiError(["Empty Field"], null, 400, "Validation failed");
+  }
+  const existingUser = await User.findOne({
+    $or: [{ username }, { email }],
+  });
+  if (existingUser) {
+    throw new ApiError(
+      ["Existing user"],
+      null,
+      4009,
+      "User with email or password already exist"
+    );
+  }
+  const avatarLocalPath = req.files?.avatar[0]?.path;
+  const coverLocalPath = req.files?.coverImage[0]?.path;
 });
-
 export { registerUser };
