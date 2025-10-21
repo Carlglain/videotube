@@ -5,7 +5,7 @@ class ApiError extends Error {
     statusCode,
     message = "Something went wrong"
   ) {
-    this.message = message;
+    super(message);
     this.data = null;
     this.statusCode = statusCode;
     this.success = false;

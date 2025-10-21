@@ -4,8 +4,10 @@ import { ApiError } from "../utils/ApiError.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, fullname, email, password } = req.body;
-  if ([name, fullname, email, password].some((field) => field?.trim() === "")) {
+  const { username, fullname, email, password } = req.body;
+  if (
+    [username, fullname, email, password].some((field) => field?.trim() === "")
+  ) {
     throw new ApiError(["Empty Field"], null, 400, "Validation failed");
   }
   const existingUser = await User.findOne({
@@ -19,6 +21,7 @@ const registerUser = asyncHandler(async (req, res) => {
       "User with email or password already exist"
     );
   }
+  console.log(req.files);
   const avatarLocalPath = req.files?.avatar[0]?.path;
   const coverLocalPath = req.files?.coverImage[0]?.path;
   if (!avatarLocalPath) {
@@ -36,7 +39,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const newUser = await User.create({
-    name,
+    username,
     fullname: fullname.toLowerCase(),
     password,
     email,

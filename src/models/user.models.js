@@ -63,7 +63,7 @@ userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
       _id: this._id, //this is what is generally required.
-      usernamename: this.username, //optional and you call take more info like below
+      username: this.username, //optional and you call take more info like below
       // fullname:this.fullname
     },
     process.env.ACCESS_TOKEN_SECRET,
