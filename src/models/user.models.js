@@ -14,7 +14,6 @@ const userSchema = new Schema(
     email: {
       type: String,
       unique: true,
-      unique: true,
       lowercase: true,
       trim: true,
     },
@@ -40,7 +39,7 @@ const userSchema = new Schema(
     password: {
       required: [true, "password is required"],
       type: String,
-      unique: true,
+      // don't make password unique
     },
     refreshToken: {
       type: String,
@@ -51,7 +50,8 @@ const userSchema = new Schema(
   }
 );
 userSchema.pre("save", async function (next) {
-  if (!this.modified(this.password)) return next();
+  // only hash password when it has been modified (or is new)
+  if (!this.isModified || !this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
@@ -75,8 +75,8 @@ userSchema.methods.generateRefreshToken = function () {
     {
       _id: this._id,
     },
-    REFRESH_TOKEN_SECRET,
-    { expiresIn: REFRESH_TOKEN_EXPIRY }
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
   );
 };
 export const User = model("User", userSchema);

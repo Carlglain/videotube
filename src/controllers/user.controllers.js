@@ -21,7 +21,8 @@ const registerUser = asyncHandler(async (req, res) => {
       "User with email or password already exist"
     );
   }
-  console.log(req.files);
+  console.log("this is the log", req.files);
+  console.warn("this is the warn", req.files);
   const avatarLocalPath = req.files?.avatar[0]?.path;
   const coverLocalPath = req.files?.coverImage[0]?.path;
   if (!avatarLocalPath) {
@@ -44,7 +45,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     email,
     password,
-    avater: avatar.url,
+    avatar: avatar.url,
     coverImage: coverImage?.url || "",
   });
   const createdUser = await User.findById(newUser._id).select(
