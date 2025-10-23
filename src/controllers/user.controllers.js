@@ -21,8 +21,6 @@ const registerUser = asyncHandler(async (req, res) => {
       "User with email or password already exist"
     );
   }
-  console.log("this is the log", req.files);
-  console.warn("this is the warn", req.files);
   const avatarLocalPath = req.files?.avatar[0]?.path;
   const coverLocalPath = req.files?.coverImage[0]?.path;
   if (!avatarLocalPath) {

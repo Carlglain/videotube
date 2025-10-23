@@ -59,3 +59,4 @@
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"500\",\"responseTime\":\"8.340\"}","timestamp":"2025-10-22T04:44:26.838Z"}
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"500\",\"responseTime\":\"9354.581\"}","timestamp":"2025-10-22T04:45:22.182Z"}
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"500\",\"responseTime\":\"94487.380\"}","timestamp":"2025-10-22T04:50:22.901Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"201\",\"responseTime\":\"11508.774\"}","timestamp":"2025-10-22T04:57:23.025Z"}
