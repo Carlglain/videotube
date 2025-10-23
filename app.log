@@ -60,3 +60,5 @@
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"500\",\"responseTime\":\"9354.581\"}","timestamp":"2025-10-22T04:45:22.182Z"}
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"500\",\"responseTime\":\"94487.380\"}","timestamp":"2025-10-22T04:50:22.901Z"}
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"201\",\"responseTime\":\"11508.774\"}","timestamp":"2025-10-22T04:57:23.025Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"500\",\"responseTime\":\"310.227\"}","timestamp":"2025-10-23T06:16:53.564Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"409\",\"responseTime\":\"455.122\"}","timestamp":"2025-10-23T06:19:14.334Z"}

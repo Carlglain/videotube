@@ -17,7 +17,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(
       ["Existing user"],
       null,
-      4009,
+      409,
       "User with email or password already exist"
     );
   }
@@ -65,6 +65,12 @@ const registerUser = asyncHandler(async (req, res) => {
     if (coverImage) {
       await deleteFromCloudinary(coverImage.public_id);
     }
+    throw new ApiError(
+      [],
+      null,
+      500,
+      "User creation failed. Please try again."
+    );
   }
 });
 export { registerUser };
