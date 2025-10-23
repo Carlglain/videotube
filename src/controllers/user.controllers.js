@@ -37,24 +37,34 @@ const registerUser = asyncHandler(async (req, res) => {
     coverImage = await uploadToCloudinary(coverLocalPath);
   }
 
-  const newUser = await User.create({
-    username,
-    fullname: fullname.toLowerCase(),
-    password,
-    email,
-    password,
-    avatar: avatar.url,
-    coverImage: coverImage?.url || "",
-  });
-  const createdUser = await User.findById(newUser._id).select(
-    "-password -refreshToken"
-  );
-  if (!createdUser) {
-    throw new ApiError([], null, 500, "something went wrong!");
-  }
+  try {
+    const newUser = await User.create({
+      username,
+      fullname: fullname.toLowerCase(),
+      password,
+      email,
+      password,
+      avatar: avatar.url,
+      coverImage: coverImage?.url || "",
+    });
+    const createdUser = await User.findById(newUser._id).select(
+      "-password -refreshToken"
+    );
+    if (!createdUser) {
+      throw new ApiError([], null, 500, "something went wrong!");
+    }
 
-  return res
-    .status(201)
-    .json(new ApiResponse(201, "User Registered succesfully ", createdUser));
+    return res
+      .status(201)
+      .json(new ApiResponse(201, "User Registered succesfully ", createdUser));
+  } catch (error) {
+    console.log("User creation failed.");
+    if (avatar) {
+      await deleteFromCloudinary(avatar.public_id);
+    }
+    if (coverImage) {
+      await deleteFromCloudinary(coverImage.public_id);
+    }
+  }
 });
 export { registerUser };
