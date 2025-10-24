@@ -62,3 +62,11 @@
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"201\",\"responseTime\":\"11508.774\"}","timestamp":"2025-10-22T04:57:23.025Z"}
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"500\",\"responseTime\":\"310.227\"}","timestamp":"2025-10-23T06:16:53.564Z"}
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"409\",\"responseTime\":\"455.122\"}","timestamp":"2025-10-23T06:19:14.334Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"201\",\"responseTime\":\"8883.673\"}","timestamp":"2025-10-24T03:09:17.925Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"500\",\"responseTime\":\"4.850\"}","timestamp":"2025-10-24T03:38:07.613Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"500\",\"responseTime\":\"1.970\"}","timestamp":"2025-10-24T03:40:24.219Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"500\",\"responseTime\":\"1.690\"}","timestamp":"2025-10-24T03:40:35.600Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"201\",\"responseTime\":\"3929.136\"}","timestamp":"2025-10-24T03:41:02.583Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"500\",\"responseTime\":\"8.251\"}","timestamp":"2025-10-24T03:42:54.105Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"201\",\"responseTime\":\"84826.803\"}","timestamp":"2025-10-24T03:47:42.136Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/v1/user/register\",\"status\":\"500\",\"responseTime\":\"52781.599\"}","timestamp":"2025-10-24T03:52:32.211Z"}

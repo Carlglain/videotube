@@ -12,6 +12,7 @@ if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir, { recursive: true });
 }
 
+console.log("this is the temp directory: ", tempDir);
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, tempDir);
