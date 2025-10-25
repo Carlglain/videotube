@@ -114,12 +114,23 @@ const loginUser = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } = await generateAccessandRefereshToken(
     existingUser._id
   );
-
-  return res.status(200).json(
-    new ApiResponse(200, "User logen in succesfully ", {
-      accessToken,
-      refreshToken,
-    })
+  const loggedInUser = await User.findById(existingUser._id).select(
+    "-password -refreshToken"
   );
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(200, "User logen in succesfully ", {
+        user: loggedInUser,
+        accessToken,
+        refreshToken,
+      })
+    );
 });
 export { registerUser, loginUser };
