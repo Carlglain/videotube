@@ -73,4 +73,36 @@ const registerUser = asyncHandler(async (req, res) => {
     );
   }
 });
-export { registerUser };
+
+const loginUser = asyncHandler(async (req, res) => {
+  const { email, password, username } = req.body;
+  if ([email, password, username].some((field) => field?.trim() === "")) {
+    throw new ApiError(["Empty Field"], null, 400, "Validation failed");
+  }
+  const existingUser = await User.findOne({
+    $or: [{ email }, { username }],
+  });
+  if (!existingUser) {
+    throw new ApiError([
+      "User not found",
+      null,
+      404,
+      "No Such User in the system",
+    ]);
+  }
+  const isValid = await existingUser.isPasswordCorrect(password);
+  if (!isValid) {
+    throw new ApiError([], null, 401, "Ivalid credentials");
+  }
+  const accessToken = existingUser.generateAccessToken();
+  const refreshToken = existingUser.generateRefreshToken();
+  existingUser.refreshToken = refreshToken;
+  await existingUser.save({ validateBeforeSave: false });
+  return res.status(200).json(
+    new ApiResponse(200, "User logen in succesfully ", {
+      accessToken,
+      refreshToken,
+    })
+  );
+});
+export { registerUser, loginUser };
