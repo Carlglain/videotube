@@ -74,6 +74,23 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
+const generateAccessandRefereshToken = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+    return { accessToken, refreshToken };
+  } catch (error) {
+    throw new ApiError(
+      [],
+      null,
+      500,
+      "Token generation failed. Please try again."
+    );
+  }
+};
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password, username } = req.body;
   if ([email, password, username].some((field) => field?.trim() === "")) {
@@ -94,10 +111,10 @@ const loginUser = asyncHandler(async (req, res) => {
   if (!isValid) {
     throw new ApiError([], null, 401, "Ivalid credentials");
   }
-  const accessToken = existingUser.generateAccessToken();
-  const refreshToken = existingUser.generateRefreshToken();
-  existingUser.refreshToken = refreshToken;
-  await existingUser.save({ validateBeforeSave: false });
+  const { accessToken, refreshToken } = await generateAccessandRefereshToken(
+    existingUser._id
+  );
+
   return res.status(200).json(
     new ApiResponse(200, "User logen in succesfully ", {
       accessToken,
