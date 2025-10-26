@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import jwt from "jsonwebtoken";
 const registerUser = asyncHandler(async (req, res) => {
   const { username, fullname, email, password } = req.body;
   if (
@@ -132,5 +133,28 @@ const loginUser = asyncHandler(async (req, res) => {
         refreshToken,
       })
     );
+});
+
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  const incomingRefreshToken = req.cookie.refreshToken || req.body.refreshToken;
+  if (!incomingRefreshToken) {
+    throw new ApiError([], null, 401, "Refresh token is required");
+  }
+
+  try {
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+    const user = await User.findById(decodedToken?._id);
+    if (!user) {
+      throw new ApiError([], null, 401, "Invalid refresh token user not found");
+    }
+    if (incomingRefreshToken !== user?.refreshToken) {
+      throw new ApiError([], null, 401, "Invalid refresh token");
+    }
+  } catch (error) {
+    throw new ApiError([], null, 401, "Invalid refresh token");
+  }
 });
 export { registerUser, loginUser };
