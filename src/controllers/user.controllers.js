@@ -153,8 +153,24 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     if (incomingRefreshToken !== user?.refreshToken) {
       throw new ApiError([], null, 401, "Invalid refresh token");
     }
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+    const { accessToken, refreshToken: newRefreshToken } =
+      await generateAccessandRefereshToken(user._id);
+    res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", newRefreshToken, options)
+      .json(
+        new ApiResponse(200, "Access token refreshed successfully", {
+          accessToken,
+          refreshToken: newRefreshToken,
+        })
+      );
   } catch (error) {
     throw new ApiError([], null, 401, "Invalid refresh token");
   }
 });
-export { registerUser, loginUser };
+export { registerUser, loginUser, refreshAccessToken };
