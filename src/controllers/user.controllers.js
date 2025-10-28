@@ -1,9 +1,12 @@
 import { User } from "../models/user.models.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
-import { uploadToCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { uploadToCloudinary } from "../utils/cloudinary.js";
+import { ApiisPasswordValid } from "../utils/ApiisPasswordValid.js";
 import jwt from "jsonwebtoken";
+import { options } from "./data.js";
+import bcrypt from "bcrypt";
 const registerUser = asyncHandler(async (req, res) => {
   const { username, fullname, email, password } = req.body;
   if (
@@ -57,7 +60,9 @@ const registerUser = asyncHandler(async (req, res) => {
 
     return res
       .status(201)
-      .json(new ApiResponse(201, "User Registered succesfully ", createdUser));
+      .json(
+        new ApiisPasswordValid(201, "User Registered succesfully ", createdUser)
+      );
   } catch (error) {
     console.log("User creation failed.");
     if (avatar) {
@@ -118,16 +123,13 @@ const loginUser = asyncHandler(async (req, res) => {
   const loggedInUser = await User.findById(existingUser._id).select(
     "-password -refreshToken"
   );
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
+
   return res
     .status(200)
     .cookie("accessToken", accessToken, options)
     .cookie("refreshToken", refreshToken, options)
     .json(
-      new ApiResponse(200, "User logen in succesfully ", {
+      new ApiisPasswordValid(200, "User logen in succesfully ", {
         user: loggedInUser,
         accessToken,
         refreshToken,
@@ -147,15 +149,11 @@ const logoutUser = asyncHandler(async (req, res) => {
       new: true,
     }
   );
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
   return res
     .status(200)
     .clearCokies("refreshToken", options)
     .clearCokies("accessToken", options)
-    .json(new ApiResponse(200, "User logged out successfull", {}));
+    .json(new ApiisPasswordValid(200, "User logged out successfull", {}));
 });
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken = req.cookie.refreshToken || req.body.refreshToken;
@@ -175,10 +173,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     if (incomingRefreshToken !== user?.refreshToken) {
       throw new ApiError([], null, 401, "Invalid refresh token");
     }
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
+
     const { accessToken, refreshToken: newRefreshToken } =
       await generateAccessandRefereshToken(user._id);
     res
@@ -186,7 +181,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       .cookie("accessToken", accessToken, options)
       .cookie("refreshToken", newRefreshToken, options)
       .json(
-        new ApiResponse(200, "Access token refreshed successfully", {
+        new ApiisPasswordValid(200, "Access token refreshed successfully", {
           accessToken,
           refreshToken: newRefreshToken,
         })
@@ -195,4 +190,37 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     throw new ApiError([], null, 401, "Invalid refresh token");
   }
 });
+
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  if ([password, oldPassword].some((field) => field?.trim() === "")) {
+    throw new ApiError(
+      ["Empty Field"],
+      null,
+      400,
+      "All fields must not be null"
+    );
+  }
+  const user = await User.findById(req.user?._id);
+  if (!user) {
+    throw new ApiError([], null, 401, "User does not exist");
+  }
+  const isPasswordValid = await user.isPasswordCorrect(oldPassword);
+  if (!isPasswordValid) {
+    throw new ApiError([], null, 401, "Incorrect old Password");
+  }
+  user.password = newPassword;
+  user.save({ validateBeforeSave: false });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Password updated successfully", {}));
+});
+
+const getCurrentUser = asyncHandler(async (req, res) => {});
+
+const updateAccountDetails = asyncHandler(async (req, res) => {});
+const updateUserAvatar = asyncHandler(async (req, res) => {});
+const updateUserCoverImage = asyncHandler(async (req, res) => {});
+
+const deleteWatchHistory = asyncHandler(async (req, res) => {});
 export { registerUser, loginUser, refreshAccessToken, logoutUser };
