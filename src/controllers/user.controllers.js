@@ -223,4 +223,10 @@ const updateUserAvatar = asyncHandler(async (req, res) => {});
 const updateUserCoverImage = asyncHandler(async (req, res) => {});
 
 const deleteWatchHistory = asyncHandler(async (req, res) => {});
-export { registerUser, loginUser, refreshAccessToken, logoutUser };
+export {
+  registerUser,
+  loginUser,
+  refreshAccessToken,
+  logoutUser,
+  changeCurrentPassword,
+};
