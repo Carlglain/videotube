@@ -6,7 +6,7 @@ import { uploadToCloudinary } from "../utils/cloudinary.js";
 import { ApiisPasswordValid } from "../utils/ApiisPasswordValid.js";
 import jwt from "jsonwebtoken";
 import { options } from "./data.js";
-import bcrypt from "bcrypt";
+
 const registerUser = asyncHandler(async (req, res) => {
   const { username, fullname, email, password } = req.body;
   if (
@@ -48,7 +48,7 @@ const registerUser = asyncHandler(async (req, res) => {
       password,
       email,
       password,
-      avatar: avatar.url,
+      avatar: avatar?.url,
       coverImage: coverImage?.url || "",
     });
     const createdUser = await User.findById(newUser._id).select(
@@ -216,10 +216,83 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Password updated successfully", {}));
 });
 
-const getCurrentUser = asyncHandler(async (req, res) => {});
+const getCurrentUser = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Current user details", req.user));
+});
 
-const updateAccountDetails = asyncHandler(async (req, res) => {});
-const updateUserAvatar = asyncHandler(async (req, res) => {});
+const updateAccountDetails = asyncHandler(async (req, res) => {
+  const { fullname, email } = req.body;
+  if (!fullname || !email) {
+    throw new ApiError([], null, 401, "Full name or email is required");
+  }
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        fullname,
+        email,
+      },
+    },
+    {
+      new: true,
+    }
+  ).select("-password -refreshToken");
+  if (!updatedUser) {
+    throw new ApiError(
+      [],
+      null,
+      500,
+      "Unable to update user details. Please try again."
+    );
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "User updated successfully", updatedUser));
+});
+const updateUserAvatar = asyncHandler(async (req, res) => {
+  const avatarLocalPath = req.file?.path;
+  if (!avatarLocalPath) {
+    throw new ApiError(
+      ["Missing field"],
+      null,
+      400,
+      "Avatar must be provided."
+    );
+  }
+  const avatar = await uploadToCloudinary(avatarLocalPath);
+  if (!avatar?.url) {
+    throw new ApiError(
+      [],
+      null,
+      500,
+      "Avatar upload failed. Please try again."
+    );
+  }
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        avatar: avatar.url,
+      },
+    },
+    { new: true }
+  );
+  if (!updatedUser) {
+    throw new ApiError(
+      [],
+      null,
+      500,
+      "Unable to update avatar. Please try again."
+    );
+  }
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, "User avatar updated successfully", updatedUser)
+    );
+});
 const updateUserCoverImage = asyncHandler(async (req, res) => {});
 
 const deleteWatchHistory = asyncHandler(async (req, res) => {});
@@ -229,4 +302,6 @@ export {
   refreshAccessToken,
   logoutUser,
   changeCurrentPassword,
+  getCurrentUser,
+  updateAccountDetails,
 };
