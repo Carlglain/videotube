@@ -3,6 +3,11 @@ import {
   loginUser,
   logoutUser,
   changeCurrentPassword,
+  refreshAccessToken,
+  updateAccountDetails,
+  getCurrentUser,
+  updateUserAvatar,
+  updateUserCoverImage,
 } from "../controllers/user.controllers.js";
 import { Router } from "express";
 import { upload } from "../middlewares/multer.middlewares.js";
@@ -29,4 +34,19 @@ router.post(
 router.get("/login", loginUser);
 router.post("/logout", verifyJWT, logoutUser);
 router.post("/update-password", verifyJWT, changeCurrentPassword);
+router.post("/refresh-token", refreshAccessToken);
+router.get("/me", verifyJWT, getCurrentUser);
+router.put("/update-account-details", verifyJWT, updateAccountDetails);
+router.put(
+  "/update-avatar",
+  verifyJWT,
+  upload.single("avatar"),
+  updateUserAvatar
+);
+router.put(
+  "/update-cover-image",
+  verifyJWT,
+  upload.single("coverImage"),
+  updateUserCoverImage
+);
 export default router;
