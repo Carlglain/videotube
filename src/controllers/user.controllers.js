@@ -293,7 +293,48 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
       new ApiResponse(200, "User avatar updated successfully", updatedUser)
     );
 });
-const updateUserCoverImage = asyncHandler(async (req, res) => {});
+const updateUserCoverImage = asyncHandler(async (req, res) => {
+  const coverLocalPath = req.file?.path;
+  if (!coverLocalPath) {
+    throw new ApiError(
+      ["Missing field"],
+      null,
+      400,
+      "Avatar must be provided."
+    );
+  }
+  const coverImage = await uploadToCloudinary(coverLocalPath);
+  if (!coverImage?.url) {
+    throw new ApiError(
+      ["Missing field"],
+      null,
+      500,
+      "Error occured while trying to update the cover image please try again."
+    );
+  }
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $or: {
+        coverImage: coverImage.url,
+      },
+    },
+    { new: true }
+  );
+  if (!updatedUser) {
+    throw new ApiError(
+      ["update failed"],
+      null,
+      500,
+      "Error occured while trying to update the cover image please try again."
+    );
+  }
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, "User cover Image updated successfully", updatedUser)
+    );
+});
 
 const deleteWatchHistory = asyncHandler(async (req, res) => {});
 export {
@@ -304,4 +345,6 @@ export {
   changeCurrentPassword,
   getCurrentUser,
   updateAccountDetails,
+  updateUserAvatar,
+  updateUserCoverImage,
 };
