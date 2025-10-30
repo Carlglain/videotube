@@ -335,8 +335,45 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
       new ApiResponse(200, "User cover Image updated successfully", updatedUser)
     );
 });
+//done by me not Hitesh so verify
+const getWatchHistory = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user?._id);
+  if (!user) {
+    throw new ApiError(["User not found"], null, 404, "User is not found");
+  }
+  return res.status(200).json(
+    new ApiResponse(200, "User watch history fetched successfully", {
+      watchHistory: user.watchHistory,
+    })
+  );
+});
 
-const deleteWatchHistory = asyncHandler(async (req, res) => {});
+const deleteWatchHistory = asyncHandler(async (req, res) => {
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    { watchHistory: [] },
+    { new: true }
+  );
+  if (!user) {
+    throw new ApiError(["User not found"], null, 404, "User is not found");
+  }
+  return res.status(200).json(
+    new ApiResponse(200, "User watch history deleted successfully", {
+      watchHistory: user.watchHistory,
+    })
+  );
+  // const user = await User.findById(req.user?._id)
+  // if (!user) {
+  //   throw new ApiError(["User not found"], null, 404, "User is not found");
+  // }
+  // user.watchHistory = []
+  // await user.save()
+  // return res.status(200).json(
+  //   new ApiResponse(200, "User watch history deleted successfully", {
+  //     watchHistory: user.watchHistory,
+  //   })
+  // );
+});
 export {
   registerUser,
   loginUser,
