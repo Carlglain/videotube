@@ -384,4 +384,6 @@ export {
   updateAccountDetails,
   updateUserAvatar,
   updateUserCoverImage,
+  getWatchHistory,
+  deleteWatchHistory,
 };

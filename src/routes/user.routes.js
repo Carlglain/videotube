@@ -8,6 +8,8 @@ import {
   getCurrentUser,
   updateUserAvatar,
   updateUserCoverImage,
+  deleteWatchHistory,
+  getWatchHistory,
 } from "../controllers/user.controllers.js";
 import { Router } from "express";
 import { upload } from "../middlewares/multer.middlewares.js";
@@ -49,4 +51,6 @@ router.put(
   upload.single("coverImage"),
   updateUserCoverImage
 );
+router.get("/watch-history", verifyJWT, getWatchHistory);
+router.delete("/delete-watch-history", verifyJWT, deleteWatchHistory);
 export default router;
