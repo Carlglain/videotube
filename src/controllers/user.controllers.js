@@ -374,7 +374,28 @@ const deleteWatchHistory = asyncHandler(async (req, res) => {
   //   })
   // );
 });
-
+export const getUserChannelProfile = asyncHandler(async (req, res) => {
+  const { username } = req.params;
+  const channel = await User.aggregate([
+    { $match: { username: username?.toLowerCase() } },
+    {
+      $lookup: {
+        $from: "subscriptions",
+        $localField: "_id",
+        $foreignField: "channel",
+        $as: "Subscribers",
+      },
+    },
+    {
+      $lookup: {
+        $from: "subscriptions",
+        $localField: "_id",
+        $foreignField: "subcriber",
+        $as: "SubscribedTo",
+      },
+    },
+  ]);
+});
 export {
   registerUser,
   loginUser,
