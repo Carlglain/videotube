@@ -362,17 +362,6 @@ const deleteWatchHistory = asyncHandler(async (req, res) => {
       watchHistory: user.watchHistory,
     })
   );
-  // const user = await User.findById(req.user?._id)
-  // if (!user) {
-  //   throw new ApiError(["User not found"], null, 404, "User is not found");
-  // }
-  // user.watchHistory = []
-  // await user.save()
-  // return res.status(200).json(
-  //   new ApiResponse(200, "User watch history deleted successfully", {
-  //     watchHistory: user.watchHistory,
-  //   })
-  // );
 });
 export const getUserChannelProfile = asyncHandler(async (req, res) => {
   const { username } = req.params;
@@ -396,6 +385,7 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
     },
   ]);
 });
+
 export {
   registerUser,
   loginUser,
