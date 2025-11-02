@@ -10,3 +10,4 @@ VidoeTube
   I may as well continue the project if i dicide to get use to this before i go to mysql.
   Yea so from the advice i got starting from mysql will help me understand mongodb more later.
   so this project is officially on hold
+  I know i'm not supposed to come here again but just to keep the streak one last day i'll come here.
